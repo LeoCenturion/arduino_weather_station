@@ -1,6 +1,5 @@
 #include <SD.h>
 
-
   /*
 Pin Configuration
 Rain Drop      A0
@@ -22,9 +21,27 @@ DHT dht(DHTPIN, DHTTYPE); //Execute DHT11 library
 
 void setup() {
   Serial.begin(9600);       //Starting serial communication
-//  Serial.println("Program started");
+  Serial.println("Programa iniciado");
+  Serial.println("Inicializando tarjeta SD");
+  if (!SD.begin()) {
+    Serial.println("La tarjeta SD falló");
+    return;
+  }
+  File dataFile = SD.open("mediciones.csv", FILE_WRITE);
+  dataFile.println("Datalogger laboratorio:");
+  if (pressure.begin()) {
+     dataFile.print("Presión (mBar),");                 // posicion 0 del array result
+     dataFile.print("Temperatura-BMP (°C),");
+     dataFile.print("Humedad (),");
+     dataFile.println("Temperatura-DHT (°C)\n");        // posicion 3 del array result
+  }   
+  else {
+      dataFile.println("BMP180 init fail");
+      while (1);
+    }
+  dataFile.close();
 
-  //BMP180 Setup
+/*  
   if (pressure.begin())     //If initialization was successful, continue
    {Serial.println("BMP180 init success");
    Serial.print("Datalogger laboratorio:");
@@ -38,12 +55,47 @@ void setup() {
       Serial.println("BMP180 init fail");
       while (1);
     }
-    
+    */
+
   //DHT11 setup
   dht.begin(); 
 }
 
 void loop() {
+  
+//  char status;
+//  double T, P, p0;  // T -> temperatura, P-> presion a la altura actual, p0-> p al nivel del mar 
+//  status = pressure.startTemperature();
+//  if (status != 0) {
+//      delay(status);
+//      status = pressure.getTemperature(T);  //todo:escribir tambien la t de bmp180
+//      result[2] = T;
+//      if (status != 0) {        
+//      status = pressure.startPressure(3); //por que 3?-> número magico
+//        if (status != 0) {
+//          delay(status);
+//          status = pressure.getPressure(P, T);
+//          if (status != 0) {
+//            p0 = pressure.sealevel(P, ALTITUDE);
+//            result[0]=p0;
+//          }}}}
+
+//  result[1] = dht.readHumidity();           // no estaria reconociendo la funcion. ampliaremos
+//  result[3] = dht.readTemperature();        // esta y la de arriba reciben un bool por parametro que no estaria pasadod<
+
+ File dataFile = SD.open("mediciones.csv");
+ dataFile.print(result[0]);
+ dataFile.print(",");
+ dataFile.print(result[1]);
+ dataFile.print(",");
+ dataFile.print(result[2]);
+ dataFile.print(",");
+ dataFile.println(result[3]);
+}
+
+
+/*
+ void loop() {
   
   //bmp180 setup
 //  char status;
@@ -62,6 +114,7 @@ void loop() {
 //            p0 = pressure.sealevel(P, ALTITUDE);
 //            result[0]=p0;
 //          }}}}
+
   result[1] = dht.readHumidity();           // no estaria reconociendo la funcion. ampliaremos
   result[3] = dht.readTemperature();        // esta y la de arriba reciben un bool por parametro que no estaria pasadod<
 //  Serial.print("Datalogger: ");
@@ -75,4 +128,7 @@ void loop() {
   Serial.print(result[3]);
   Serial.print("\n");
 }
+ */
+
+
 
