@@ -23,12 +23,19 @@ void setup() {
   Serial.begin(9600);       //Starting serial communication
   Serial.println("Programa iniciado");
   Serial.println("Inicializando tarjeta SD");
-  if (!SD.begin()) {
+  if (!SD.begin(4)) {
     Serial.println("La tarjeta SD falló");
     return;
   }
-  File dataFile = SD.open("mediciones.csv", FILE_WRITE);
-  dataFile.println("Datalogger laboratorio:");
+  File dataFile = SD.open("mediciones.txt", FILE_WRITE);
+  if (!dataFile) {
+    Serial.println("Marcelo, esto falló");
+  }
+  else {
+    Serial.println("La tarjeta SD creó el archivo y llegué hasta acá. vamo manaos"); 
+    dataFile.println("Datalogger laboratorio:");
+  }
+/*
   if (pressure.begin()) {
      dataFile.print("Presión (mBar),");                 // posicion 0 del array result
      dataFile.print("Temperatura-BMP (°C),");
@@ -39,7 +46,11 @@ void setup() {
       dataFile.println("BMP180 init fail");
       while (1);
     }
+*/
   dataFile.close();
+  if(!SD.exists("mediciones.txt")){
+    Serial.println("No. Este archivo no existe");
+  }
 
 /*  
   if (pressure.begin())     //If initialization was successful, continue
