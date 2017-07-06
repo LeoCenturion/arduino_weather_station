@@ -74,25 +74,25 @@ void setup() {
 
 void loop() {
   
-//  char status;
-//  double T, P, p0;  // T -> temperatura, P-> presion a la altura actual, p0-> p al nivel del mar 
-//  status = pressure.startTemperature();
-//  if (status != 0) {
-//      delay(status);
-//      status = pressure.getTemperature(T);  //todo:escribir tambien la t de bmp180
-//      result[2] = T;
-//      if (status != 0) {        
-//      status = pressure.startPressure(3); //por que 3?-> número magico
-//        if (status != 0) {
-//          delay(status);
-//          status = pressure.getPressure(P, T);
-//          if (status != 0) {
-//            p0 = pressure.sealevel(P, ALTITUDE);
-//            result[0]=p0;
-//          }}}}
-
-//  result[1] = dht.readHumidity();           // no estaria reconociendo la funcion. ampliaremos
-//  result[3] = dht.readTemperature();        // esta y la de arriba reciben un bool por parametro que no estaria pasadod<
+    char status;
+    double T, P, p0;  // T -> temperatura, P-> presion a la altura actual, p0-> p al nivel del mar 
+    status = pressure.startTemperature();
+    if (status != 0) {
+        delay(status);
+        status = pressure.getTemperature(T);  //todo:escribir tambien la t de bmp180
+        result[2] = T;
+        if (status != 0) {        
+        status = pressure.startPressure(3); //por que 3?-> número magico
+          if (status != 0) {
+            delay(status);
+            status = pressure.getPressure(P, T);
+            if (status != 0) {
+              p0 = pressure.sealevel(P, ALTITUDE);
+              result[0]=p0;
+            }}}}
+  
+  //  result[1] = dht.readHumidity();           // no estaria reconociendo la funcion. ampliaremos
+  //  result[3] = dht.readTemperature();        // esta y la de arriba reciben un bool por parametro que no estaria pasadod<
 
  File dataFile = SD.open("mediciones.csv");
  dataFile.print(result[0]);
